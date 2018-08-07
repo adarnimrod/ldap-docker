@@ -1,0 +1,29 @@
+---
+version: '3'
+services:
+    slapd:
+        build:
+            context: slapd/
+        volumes:
+            - _run_ldap:/run/slapd
+            - ldap:/var/lib/ldap
+        environment:
+            LDAP_ROOTPASS: foo
+            LDAP_DOMAIN: nowhere.com
+            LDAP_ORGANIZATION: none
+    phpldapadmin:
+        build:
+            context: phpldapadmin/
+        links:
+            - slapd
+        volumes:
+            - _run_ldap:/run/slapd
+        environment:
+            PLA_HOST: ldapi://%2frun%2fslapd%2fldapi
+            PLA_BASE_DN: 'dc=nowhere,dc=com'
+            PLA_BIND_ID: 'cn=admin,dc=nowhere,dc=com'
+        ports:
+            - 80:80
+volumes:
+    _run_ldap:
+    ldap:
