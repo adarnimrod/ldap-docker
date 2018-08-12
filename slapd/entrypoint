@@ -4,33 +4,15 @@ set -eux
 chown -R openldap:openldap /run/slapd
 chown -R openldap:openldap /var/lib/ldap
 
-if [ -n "${LDAP_ROOTPASS:-}" ]
-then
-cat <<EOF | debconf-set-selections
-slapd slapd/internal/generated_adminpw password ${LDAP_ROOTPASS}
-slapd slapd/internal/adminpw password ${LDAP_ROOTPASS}
-slapd slapd/password2 password ${LDAP_ROOTPASS}
-slapd slapd/password1 password ${LDAP_ROOTPASS}
+cat << EOF | debconf-set-selections -v
+slapd slapd/internal/generated_adminpw password ${LDAP_ROOTPASS:-}
+slapd slapd/internal/adminpw password ${LDAP_ROOTPASS:-}
+slapd slapd/password2 password ${LDAP_ROOTPASS:-}
+slapd slapd/password1 password ${LDAP_ROOTPASS:-}
+slapd slapd/domain string ${LDAP_DOMAIN:-}
+slapd shared/organization string ${LDAP_ORGANIZATION:-}
 EOF
-fi
 
-if [ -n "${LDAP_DOMAIN:-}" ]
-then
-cat <<EOF | debconf-set-selections
-slapd slapd/domain string ${LDAP_DOMAIN}
-EOF
-fi
-
-if [ -n "${LDAP_ORGANIZATION:-}" ]
-then
-cat <<EOF | debconf-set-selections
-slapd shared/organization string ${LDAP_ORGANIZATION}
-EOF
-fi
-
-if [ -n "${LDAP_ROOTPASS:-}" ] || [ -n "${LDAP_DOMAIN:-}" ] || [ -n "${LDAP_ORGANIZATION:-}" ]
-then
-    dpkg-reconfigure -f noninteractive slapd
-fi
+dpkg-reconfigure -f noninteractive slapd
 
 eval exec "$@"
