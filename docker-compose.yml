@@ -19,7 +19,6 @@ services:
         volumes:
             - _run_ldap:/run/slapd
         environment:
-            PLA_HOST: ldapi://%2frun%2fslapd%2fldapi
             PLA_BASE_DN: 'dc=nowhere,dc=com'
             PLA_BIND_ID: 'cn=admin,dc=nowhere,dc=com'
         ports:

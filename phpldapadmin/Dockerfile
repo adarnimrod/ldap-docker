@@ -6,5 +6,6 @@ RUN apk add --update --no-cache phpldapadmin php5-apache2 php5-openssl && \
 
 COPY --chown=root:root config.php /usr/share/webapps/phpldapadmin/config/
 COPY --chown=root:root phpldapadmin.conf /etc/apache2/conf.d/
+ENV PLA_HOST=ldapi://%2frun%2fslapd%2fldapi
 CMD [ "httpd", "-DFOREGROUND" ]
 HEALTHCHECK CMD wget --spider --quiet http://localhost/htdocs/index.php || exit 1
