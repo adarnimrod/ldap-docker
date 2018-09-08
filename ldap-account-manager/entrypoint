@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eux
+
+chown root:root /var/lib/ldap-account-manager
+chmod 755 /var/lib/ldap-account-manager
+cp --archive --no-clobber --verbose --no-target-directory /var/lib/ldap-account-manager.orig /var/lib/ldap-account-manager
+eval exec "$@"

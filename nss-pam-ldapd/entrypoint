@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eux
+
+chown -R nslcd:nslcd /run/nslcd
+
+cat << EOF | debconf-set-selections -v
+nslcd nslcd/ldap-uris string ${LDAP_URIS:-}
+nslcd	nslcd/ldap-bindpw	password	${LDAP_BINDPW:-}
+nslcd	nslcd/ldap-auth-type	select	${LDAP_AUTH_TYPE:-}
+nslcd	nslcd/ldap-binddn	string	${LDAP_BINDDN:-}
+nslcd	nslcd/ldap-sasl-authcid	string	${LDAP_SASL_AUTHCID:-}
+nslcd	nslcd/ldap-reqcert	select	${LDAP_REQCERT:-}
+nslcd	nslcd/ldap-sasl-realm	string	${LDAP_SASL_REALM:-}
+nslcd	nslcd/ldap-starttls	boolean	${LDAP_STARTTLS:-}
+nslcd	nslcd/ldap-base	string	${LDAP_BASE_DN:-}
+nslcd	nslcd/ldap-sasl-authzid	string	${LDAP_SASL_AUTHZID:-}
+nslcd	nslcd/ldap-sasl-mech	select	${LDAP_SASL_MECH:-}
+nslcd	nslcd/ldap-cacertfile	string	${LDAP_CACERTFILE:-}
+nslcd	nslcd/ldap-sasl-secprops	string	${LDAP_SASL_SECPROPS:-}
+EOF
+
+dpkg-reconfigure -f noninteractive nslcd
+
+eval exec gosu "nslcd:nslcd" "$@"

@@ -1,6 +1,6 @@
 # LDAP Docker
 
-> A dockerized OpenLDAP with phpLDAPadmin webui.
+> A dockerized OpenLDAP with LDAP Account Manager.
 
 ## Requirements
 

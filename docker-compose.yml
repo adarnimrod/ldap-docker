@@ -11,18 +11,28 @@ services:
             LDAP_ROOTPASS: foo
             LDAP_DOMAIN: nowhere.com
             LDAP_ORGANIZATION: none
-    phpldapadmin:
+
+    nss-pam-ldapd:
         build:
-            context: phpldapadmin/
+            context: nss-pam-ldapd/
+        command: /usr/sbin/nslcd --debug --nofork
+        environment:
+            LDAP_BASE_DN: 'dc=nowhere,dc=com'
+        volumes:
+            - _run_ldap:/run/slapd
+
+    ldap-account-manager:
+        build:
+            context: ldap-account-manager/
         links:
             - slapd
         volumes:
             - _run_ldap:/run/slapd
-        environment:
-            PLA_BASE_DN: 'dc=nowhere,dc=com'
-            PLA_BIND_ID: 'cn=admin,dc=nowhere,dc=com'
+            - ldap-account-manager:/var/lib/ldap-account-manager
         ports:
             - 80:80
+
 volumes:
     _run_ldap:
     ldap:
+    ldap-account-manager:
