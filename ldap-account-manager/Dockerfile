@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:sid-slim
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         ldap-account-manager\
