@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: '3.5'
 services:
     slapd:
         build:
@@ -11,6 +11,8 @@ services:
             LDAP_ROOTPASS: foo
             LDAP_DOMAIN: nowhere.com
             LDAP_ORGANIZATION: none
+        networks: &networks
+            - shore
 
     nss-pam-ldapd:
         build:
@@ -20,6 +22,7 @@ services:
             LDAP_BASE_DN: 'dc=nowhere,dc=com'
         volumes:
             - _run_ldap:/run/slapd
+        networks: *networks
 
     ldap-account-manager:
         build:
@@ -31,8 +34,13 @@ services:
             - ldap-account-manager:/var/lib/ldap-account-manager
         ports:
             - 80:80
+        networks: *networks
 
 volumes:
     _run_ldap:
     ldap:
     ldap-account-manager:
+
+networks:
+    shore:
+        name: shore
