@@ -8,7 +8,7 @@ RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/so
     && \
     mkdir -p /run/slapd && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/*
-COPY entrypoint /
+COPY --chown=root:root entrypoint /
 EXPOSE 389 636
 VOLUME [ "/var/lib/ldap" ]
 ENV LDAP_URLS="ldap:/// ldapi:/// ldaps:///" \

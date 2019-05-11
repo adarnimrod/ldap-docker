@@ -1,8 +1,8 @@
 #!/bin/sh
 set -eux
 
-chown -R openldap:openldap /run/slapd
-chown -R openldap:openldap /var/lib/ldap
+install -d -o openldap -g openldap /run/slapd
+install -d -o openldap -g openldap /var/lib/ldap
 
 cat << EOF | debconf-set-selections -v
 slapd slapd/internal/generated_adminpw password ${LDAP_ROOTPASS:-}
@@ -13,6 +13,6 @@ slapd slapd/domain string ${LDAP_DOMAIN:-}
 slapd shared/organization string ${LDAP_ORGANIZATION:-}
 EOF
 
-dpkg-reconfigure -f noninteractive slapd
+DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive slapd
 
 eval exec "$@"
