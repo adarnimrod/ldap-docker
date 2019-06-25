@@ -1,0 +1,28 @@
+--- /var/lib/ldap-account-manager.orig/config/config.cfg	2019-03-25 18:21:36.000000000 +0200
++++ /var/lib/ldap-account-manager.orig/config/config.cfg	2019-06-25 14:18:51.906120546 +0300
+@@ -9,4 +9,4 @@
+ logLevel: 4
+ 
+ # log destination
+-logDestination: SYSLOG
++logDestination: /var/log/apache2/lam.log
+--- /etc/apache2/sites-available/000-default.conf	2018-11-03 13:34:33.000000000 +0200
++++ /etc/apache2/sites-available/000-default.conf	2019-06-25 14:55:43.956626591 +0300
+@@ -18,7 +18,7 @@
+ 	#LogLevel info ssl:warn
+ 
+ 	ErrorLog ${APACHE_LOG_DIR}/error.log
+-	CustomLog ${APACHE_LOG_DIR}/access.log combined
++	CustomLog ${APACHE_LOG_DIR}/access.log combined expr=!(%{REMOTE_HOST}=='127.0.0.1'&&%{HTTP_USER_AGENT}=='Healthcheck')
+ 
+ 	# For most configuration files from conf-available/, which are
+ 	# enabled or disabled at a global level, it is possible to
+@@ -26,6 +26,8 @@
+ 	# following line enables the CGI configuration for this host only
+ 	# after it has been globally disabled with "a2disconf".
+ 	#Include conf-available/serve-cgi-bin.conf
++
++    RedirectMatch permanent "^/$" "/lam"
+ </VirtualHost>
+ 
+ # vim: syntax=apache ts=4 sw=4 sts=4 sr noet

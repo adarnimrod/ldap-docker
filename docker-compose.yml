@@ -1,46 +1,43 @@
+# vim:ff=unix:ts=2:sw=2:ai:expandtab
 ---
 version: '3.5'
 services:
-    slapd:
-        build:
-            context: slapd/
-        volumes:
-            - _run_ldap:/run/slapd
-            - ldap:/var/lib/ldap
-        environment:
-            LDAP_ROOTPASS: foo
-            LDAP_DOMAIN: nowhere.com
-            LDAP_ORGANIZATION: none
-        networks: &networks
-            - shore
+  slapd:
+    build:
+      context: slapd/
+    volumes:
+      - _run_ldap:/run/slapd
+      - ldap:/var/lib/ldap
+    environment:
+      LDAP_ROOTPASS: foo
+      LDAP_DOMAIN: nowhere.com
+      LDAP_ORGANIZATION: none
 
-    nss-pam-ldapd:
-        build:
-            context: nss-pam-ldapd/
-        command: /usr/sbin/nslcd --debug --nofork
-        environment:
-            LDAP_BASE_DN: 'dc=nowhere,dc=com'
-        volumes:
-            - _run_ldap:/run/slapd
-        networks: *networks
+  nss-pam-ldapd:
+    build:
+      context: nss-pam-ldapd/
+    command: /usr/sbin/nslcd --debug --nofork
+    environment:
+      LDAP_BASE_DN: 'dc=nowhere,dc=com'
+    volumes:
+      - _run_ldap:/run/slapd
 
-    ldap-account-manager:
-        build:
-            context: ldap-account-manager/
-        links:
-            - slapd
-        volumes:
-            - _run_ldap:/run/slapd
-            - ldap-account-manager:/var/lib/ldap-account-manager
-        ports:
-            - 80:80
-        networks: *networks
+  ldap-account-manager:
+    build:
+      context: ldap-account-manager/
+    links:
+      - slapd
+    volumes:
+      - _run_ldap:/run/slapd
+      - ldap-account-manager:/var/lib/ldap-account-manager
+    ports:
+      - 80:80
 
 volumes:
-    _run_ldap:
-    ldap:
-    ldap-account-manager:
+  _run_ldap:
+  ldap:
+  ldap-account-manager:
 
 networks:
-    shore:
-        name: shore
+  default:
+    name: shore
