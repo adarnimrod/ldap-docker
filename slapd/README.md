@@ -2,6 +2,11 @@
 
 > Dockerized OpenLDAP daemon.
 
+## Interfaces exposed
+
+The container exposes TCP ports 389 (LDAP) and 636 (LDAPS) as well as the
+`ldapi` Unix socket in the `/run/slapd` volume.
+
 ## Environment variables
 
 Name | Description | Default value

@@ -11,6 +11,7 @@ RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/so
 COPY --chown=root:root entrypoint /
 EXPOSE 389 636
 VOLUME [ "/var/lib/ldap" ]
+VOLUME [ "/run/ldap" ]
 ENV LDAP_URLS="ldap:/// ldapi:/// ldaps:///" \
     SLAPD_DEBUG_LEVEL="NONE"
 ENTRYPOINT [ "/entrypoint" ]
