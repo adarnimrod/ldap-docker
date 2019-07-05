@@ -1,10 +1,10 @@
 FROM debian:sid-slim
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates \
-        ldap-account-manager\
-        patch \
-        wget \
+        ca-certificates=20190110 \
+        ldap-account-manager=6.7-1 \
+        patch=2.7.6-4 \
+        wget=1.20.1-1.1 \
     && \
     chmod 755 /var/log/apache2 && \
     ln -sf /dev/stdout /var/log/apache2/access.log && \

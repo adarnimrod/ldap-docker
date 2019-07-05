@@ -1,10 +1,10 @@
 FROM debian:stretch-slim
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates \
-        gosu \
-        libnss-ldapd \
-        libpam-ldapd \
+        ca-certificates=20161130+nmu1+deb9u1 \
+        gosu=1.10-1+b2 \
+        libnss-ldapd=0.9.7-2+deb9u1 \
+        libpam-ldapd=0.9.7-2+deb9u1 \
     && \
     mkdir -p /run/nslcd && \
     chown -R nslcd:nslcd /run/nslcd/ && \

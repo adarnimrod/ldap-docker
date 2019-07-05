@@ -25,3 +25,8 @@ repos:
     hooks:
       - id: shell-lint
       - id: shellcheck
+  - repo: https://www.shore.co.il/git/docker-pre-commit
+    rev: v0.1.0
+    hooks:
+      - id: hadolint
+      - id: docker-compose

@@ -2,9 +2,9 @@ FROM debian:stretch-slim
 RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/backports.list && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        gnutls-bin \
-        ldap-utils \
-        slapd \
+        gnutls-bin=3.5.8-5+deb9u4 \
+        ldap-utils=2.4.44+dfsg-5+deb9u2 \
+        slapd=2.4.44+dfsg-5+deb9u2 \
     && \
     mkdir -p /run/slapd && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/*
