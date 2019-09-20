@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eux
+
+slapcat -n0 -v -l /var/backups/ldap/config.ldif
+
+for dn in $(ldapsearch -Y EXTERNAL -LLL -s base -b '' o namingContexts | sed -n '/namingContexts/ s/namingContexts: //gp')
+do
+    slapcat -b "$dn" -v -l "/var/backups/$dn.ldif"
+done

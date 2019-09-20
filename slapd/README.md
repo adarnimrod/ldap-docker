@@ -15,10 +15,27 @@ Name | Description | Default value
 `LDAP_ROOTPASS` | Root password.
 `LDAP_DOMAIN` | Domain.
 `LDAP_ORGANIZATION` | Organization.
+`SLAPD_DEBUG_LEVEL` | The `slapd` debug/ log level.
+`SSL_CERT_FILE` | Location of the SSL certificate file.
+`SSL_KEY_FILE` | Location of the SSL key file.
+`SSL_CA_FILE` | Location of the SSL certificate authority file.
+
+## SSL
+
+If the relevant environment variables aren't changed from their default values,
+on startup the container will generate a key and self-signed certificate with
+the FQDN of the container. If the location of the SSL key and certificate are
+provided, those are used instead.
 
 ## Persistence
 
-The database is at `/var/lib/ldap`.
+The configuration (`cn=config`) and data LDAP directories reside in the
+`config` and `data` diretories respectively in the `/var/lib/ldap` volume.
+The LDAP directories are generated only if they're missing. Changes to
+environment variables afterwards won't change the configuration, since that is
+persisted to a volume. There's also the `/var/backups/ldap` volume where the
+`backup` script saves snapshots of the LDAP directories (config directory
+included).
 
 ## License
 

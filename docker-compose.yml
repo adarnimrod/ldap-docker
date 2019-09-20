@@ -5,13 +5,17 @@ services:
   ldap:
     build:
       context: slapd/
-    volumes:
-      - _run_ldap:/run/slapd
-      - ldap:/var/lib/ldap
+    domainname: "${LDAP_HOSTNAME:-ldap}.${LDAP_DOMAIN:-nowhere.com}"
     environment:
       LDAP_ROOTPASS: "${LDAP_ROOTPASS:-foo}"
       LDAP_DOMAIN: "${LDAP_DOMAIN:-nowhere.com}"
       LDAP_ORGANIZATION: "${LDAP_ORGANIZATION:-none}"
+    hostname: "${LDAP_HOSTNAME:-ldap}"
+    restart: always
+    volumes:
+      - _run_slapd:/run/slapd
+      - ldap:/var/lib/ldap
+      - backup_ldap:/var/backups/ldap
 
   nss-pam-ldapd:
     build:
@@ -20,23 +24,29 @@ services:
     environment:
       LDAP_BASE_DN: "${LDAP_BASE_DN:-dc=nowhere,dc=com}"
     volumes:
-      - _run_ldap:/run/slapd
+      - _run_slapd:/run/slapd
 
   ldap-account-manager:
     build:
       context: ldap-account-manager/
     links:
       - ldap
-    volumes:
-      - _run_ldap:/run/slapd
-      - ldap-account-manager:/var/lib/ldap-account-manager
     ports:
       - 80:80
+    restart: always
+    volumes:
+      - _run_slapd:/run/slapd
+      - ldap-account-manager:/var/lib/ldap-account-manager
 
 volumes:
-  _run_ldap:
+  _run_slapd:
   ldap:
   ldap-account-manager:
+    labels:
+      snapshot: 'true'
+  backup_ldap:
+    labels:
+      snapshot: 'true'
 
 networks:
   default:

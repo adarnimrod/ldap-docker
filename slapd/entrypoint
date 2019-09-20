@@ -1,18 +1,70 @@
 #!/bin/sh
 set -eux
 
-install -d -o openldap -g openldap /run/slapd
-install -d -o openldap -g openldap /var/lib/ldap
+# Get the root password hash and unset the cleartext password.
+PASSWORD_HASH="$(slappasswd -ns "$LDAP_ROOTPASS")"
+unset LDAP_ROOTPASS
+export PASSWORD_HASH
 
-cat << EOF | debconf-set-selections -v
-slapd slapd/internal/generated_adminpw password ${LDAP_ROOTPASS:-}
-slapd slapd/internal/adminpw password ${LDAP_ROOTPASS:-}
-slapd slapd/password2 password ${LDAP_ROOTPASS:-}
-slapd slapd/password1 password ${LDAP_ROOTPASS:-}
-slapd slapd/domain string ${LDAP_DOMAIN:-}
-slapd shared/organization string ${LDAP_ORGANIZATION:-}
+# See https://github.com/moby/moby/issues/8231
+# shellcheck disable=SC2039
+ulimit -n 1024 || true
+
+# Create and set owner for runtime directories.
+install -d -o openldap -g openldap /run/slapd
+install -d -o openldap -g openldap /var/backups/ldap
+install -d -o openldap -g openldap /var/lib/ldap
+install -d -o openldap -g openldap /var/lib/ldap/config
+install -d -o openldap -g openldap /var/lib/ldap/data
+
+# Base DN.
+BASE_DN="dc=$(echo "$LDAP_DOMAIN" | sed 's/^\.//; s/\.$//; s/\./,dc=/g')"
+export BASE_DN
+
+# DC.
+DC="$(echo "$LDAP_DOMAIN" | sed 's/^\.//; s/\..*$//')"
+export DC
+
+# Generate self-signed certificates if none are provided.
+if [ "${SSL_CERT_FILE:-}" = "/etc/ssl/certs/ssl-cert-snakeoil.pem" ] || \
+   [ "${SSL_KEY_FILE:-}" = "/etc/ssl/private/ssl-cert-snakeoil.key" ]
+then
+    echo Generating self-signed key and certificate. >&2
+    DEBIAN_FRONTEND=noninteractive time make-ssl-cert generate-default-snakeoil --force-overwrite
+fi
+
+# Generate random DH parameters.
+echo Generating DH parameters, this will take a while. >&2
+time openssl dhparam -out /usr/share/slapd/dh.pem 2048
+
+# Run slapadd with the correct user and location of the config directory.
+alias slapadd='chroot --userspec openldap:openldap / slapadd -gv -F /var/lib/ldap/config'
+
+# Create configuration is none is present.
+if [ -z "$(find /var/lib/ldap/config -maxdepth 1 -mindepth  1)" ]
+then
+    echo No configuration found, generating a new one. >&2
+    # shellcheck disable=SC2002
+    cat /usr/share/slapd/config.ldif | envsubst | slapadd -b 'cn=config'
+fi
+
+# Create directory if none is present.
+if [ -z "$(find /var/lib/ldap/data -maxdepth 1 -mindepth 1)" ]
+then
+    echo No directory found, generating a new one, >&2
+    # shellcheck disable=SC2002
+    cat /usr/share/slapd/skel.ldif | envsubst | slapadd -b "$BASE_DN"
+fi
+
+# Configure the client.
+cat << EOF >> /etc/ldap/ldap.conf
+URI         ldapi:///
+SASL_MECH   EXTERNAL
+BASE        $BASE_DN
 EOF
 
-DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive slapd
+# Unset the root password hash.
+unset PASSWORD_HASH
 
+# Run CMD.
 eval exec "$@"

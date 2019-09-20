@@ -1,0 +1,13 @@
+dn: ${BASE_DN}
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: ${LDAP_ORGANIZAION}
+dc: ${DC}
+
+dn: cn=admin,${BASE_DN}
+objectClass: simpleSecurityObject
+objectClass: organizationalRole
+cn: admin
+description: LDAP administrator
+userPassword: ${PASSWORD_HASH}
