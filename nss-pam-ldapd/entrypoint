@@ -19,6 +19,19 @@ nslcd	nslcd/ldap-cacertfile	string	${LDAP_CACERTFILE:-}
 nslcd	nslcd/ldap-sasl-secprops	string	${LDAP_SASL_SECPROPS:-}
 EOF
 
-dpkg-reconfigure -f noninteractive nslcd
+DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive nslcd
+
+cat << EOF | tee /etc/ldap/ldap.conf
+URI ${LDAP_URIS:-}
+BASE ${LDAP_BASE_DN:-}
+BINDDN ${LDAP_BINDDN:-}
+SASL_MECH ${LDAP_SASL_MECH:-}
+SASL_REALMa ${LDAP_SASL_REALM:-}
+SASL_AUTHCID ${LDAP_SASL_AUTHCID:-}
+SASL_AUTHZID ${LDAP_SASL_AUTHZID:-}
+SASL_SECPROPS ${LDAP_SASL_SECPROPS:-}
+TLS_CACERT  ${LDAP_SASL_SECPROPS:-}
+TLS_REQCERT ${LDAP_REQCERT:-}
+EOF
 
 eval exec gosu "nslcd:nslcd" "$@"

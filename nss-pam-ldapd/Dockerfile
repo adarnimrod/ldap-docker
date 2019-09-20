@@ -9,13 +9,15 @@ RUN apt-get update && \
     mkdir -p /run/nslcd && \
     chown -R nslcd:nslcd /run/nslcd/ && \
     sed -i 's/compat/compat ldap/g' /etc/nsswitch.conf && \
-    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/* /etc/nslcd.conf
+    apt-get clean && \
+    rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /etc/nslcd.conf
 COPY --chown=root:root entrypoint /
 ENV LDAP_URIS=ldapi:/// \
     LDAP_AUTH_TYPE=none \
     LDAP_STARTTLS=false \
     LDAP_BASE_DN="dc=trusted" \
-    LDAP_CACERTFILE=/etc/ssl/certs/ca-certificates.crt
+    LDAP_CACERTFILE=/etc/ssl/certs/ca-certificates.crt \
+    LDAP_REQCERT=never
 ENTRYPOINT [ "/entrypoint" ]
 CMD [ "/usr/sbin/nslcd", "--nofork" ]
 HEALTHCHECK CMD pgrep nslcd || exit 1

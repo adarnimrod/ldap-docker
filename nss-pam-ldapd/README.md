@@ -18,6 +18,7 @@ Name | Default value
 `LDAP_STARTTLS` | `false`
 `LDAP_BASE_DN` | `dc=trusted`
 `LDAP_CACERTFILE` | `/etc/ssl/certs/ca-certificates.crt`
+`LDAP_REQCERT` | `never`
 
 ## License
 
