@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+include_once('/usr/share/ldap-account-manager/lib/config.inc');
+
+// For the general settings.
+$cfg = new LAMCfgMain();
+$cfg->setPassword($argv[1]);
+$cfg->save();
+
+// For the server profiles.
+$conf = new LAMConfig("lam");
+$conf->set_Passwd($argv[1]);
+$conf->save();
+

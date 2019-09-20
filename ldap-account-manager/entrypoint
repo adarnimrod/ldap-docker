@@ -1,6 +1,15 @@
 #!/bin/sh
 set -eux
 
-install -d -m 755 -o root -g root /var/lib/ldap-account-manager
-cp --archive --no-clobber --verbose --no-target-directory /var/lib/ldap-account-manager.orig /var/lib/ldap-account-manager
+# Render environment variables in the config file.
+tempfile="$(mktemp)"
+envsubst < /var/lib/ldap-account-manager/config/lam.conf > "$tempfile"
+cat "$tempfile" > /var/lib/ldap-account-manager/config/lam.conf
+rm "$tempfile"
+
+# Set the password and unset the variable from memory.
+chroot --userspec=www-data / /usr/local/sbin/lam-setpass "$LAM_PASSWORD"
+unset LAM_PASSWORD
+
+# Start the process.
 eval exec "$@"

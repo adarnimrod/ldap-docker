@@ -21,6 +21,8 @@ services:
     build:
       context: nss-pam-ldapd/
     command: /usr/sbin/nslcd --debug --nofork
+    depends_on:
+      - ldap
     environment:
       LDAP_BASE_DN: "${LDAP_BASE_DN:-dc=nowhere,dc=com}"
     volumes:
@@ -29,21 +31,21 @@ services:
   ldap-account-manager:
     build:
       context: ldap-account-manager/
-    links:
+    depends_on:
       - ldap
+    environment:
+      LAM_PASSWORD: "${LAM_PASSWORD:-foo}"
+      LDAP_ADMIN_DN: "cn=admin,${LDAP_BASE_DN:-dc=nowhere,dc=com}"
+      LDAP_BASE_DN: "${LDAP_BASE_DN:-dc=nowhere,dc=com}"
     ports:
       - 80:80
     restart: always
     volumes:
       - _run_slapd:/run/slapd
-      - ldap-account-manager:/var/lib/ldap-account-manager
 
 volumes:
   _run_slapd:
   ldap:
-  ldap-account-manager:
-    labels:
-      snapshot: 'true'
   backup_ldap:
     labels:
       snapshot: 'true'

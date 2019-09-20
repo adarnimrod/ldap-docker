@@ -1,5 +1,5 @@
---- /var/lib/ldap-account-manager.orig/config/config.cfg	2019-03-25 18:21:36.000000000 +0200
-+++ /var/lib/ldap-account-manager.orig/config/config.cfg	2019-06-25 14:18:51.906120546 +0300
+--- /etc/ldap-account-manager/config.cfg	2019-03-25 18:21:36.000000000 +0200
++++ /etc/ldap-account-manager/config.cfg	2019-06-25 14:18:51.906120546 +0300
 @@ -9,4 +9,4 @@
  logLevel: 4
  
@@ -26,3 +26,46 @@
  </VirtualHost>
  
  # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+--- /var/lib/ldap-account-manager/config/lam.conf	2019-09-20 23:14:19.000000000 +0300
++++ /var/lib/ldap-account-manager/config/lam.conf	2019-09-20 23:59:56.291338527 +0300
+@@ -5,22 +5,22 @@
+ ###################################################################################################
+ 
+ # server address (e.g. ldap://localhost:389 or ldaps://localhost:636)
+-ServerURL: ldap://localhost:389
++ServerURL: ${LDAP_URI}
+ 
+ # list of users who are allowed to use LDAP Account Manager
+ # names have to be seperated by semicolons
+ # e.g. admins: cn=admin,dc=yourdomain,dc=org;cn=root,dc=yourdomain,dc=org
+-Admins: cn=Manager,dc=my-domain,dc=com
++Admins: ${LDAP_ADMIN_DN}
+ 
+ # password to change these preferences via webfrontend (default: lam)
+ Passwd: lam
+ 
+ # suffix of tree view
+ # e.g. dc=yourdomain,dc=org
+-treesuffix: dc=yourdomain,dc=org
++treesuffix: ${LDAP_BASE_DN}
+ 
+ # default language (a line from config/language)
+-defaultLanguage: en_GB.utf8
++defaultLanguage: en_US.utf8
+ 
+ # Path to external Script
+ scriptPath:
+@@ -52,11 +52,11 @@
+ activeTypes: user,group
+ 
+ 
+-types: suffix_user: ou=People,dc=my-domain,dc=com
++types: suffix_user: ou=People,${LDAP_BASE_DN}
+ types: attr_user: #uid;#givenName;#sn;#uidNumber;#gidNumber
+ types: modules_user: inetOrgPerson,posixAccount,shadowAccount
+ 
+-types: suffix_group: ou=group,dc=my-domain,dc=com
++types: suffix_group: ou=group,${LDAP_BASE_DN}
+ types: attr_group: #cn;#gidNumber;#memberUID;#description
+ types: modules_group: posixGroup
+ 
