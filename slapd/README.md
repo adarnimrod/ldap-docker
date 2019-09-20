@@ -15,7 +15,7 @@ Name | Description | Default value
 `LDAP_ROOTPASS` | Root password.
 `LDAP_DOMAIN` | Domain.
 `LDAP_ORGANIZATION` | Organization.
-`SLAPD_DEBUG_LEVEL` | The `slapd` debug/ log level.
+`SLAPD_DEBUG_LEVEL` | The `slapd` debug/ log level. | `stats,stats2,none`
 `SSL_CERT_FILE` | Location of the SSL certificate file.
 `SSL_KEY_FILE` | Location of the SSL key file.
 `SSL_CA_FILE` | Location of the SSL certificate authority file.
