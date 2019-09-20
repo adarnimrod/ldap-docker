@@ -4,6 +4,8 @@ version: '3.5'
 services:
   ldap:
     build:
+      cache_from:
+        - adarnimrod/slapd
       context: slapd/
     domainname: "${LDAP_HOSTNAME:-ldap}.${LDAP_DOMAIN:-nowhere.com}"
     environment:
@@ -11,6 +13,7 @@ services:
       LDAP_DOMAIN: "${LDAP_DOMAIN:-nowhere.com}"
       LDAP_ORGANIZATION: "${LDAP_ORGANIZATION:-none}"
     hostname: "${LDAP_HOSTNAME:-ldap}"
+    image: adarnimrod/slapd
     restart: always
     volumes:
       - _run_slapd:/run/slapd
@@ -30,6 +33,8 @@ services:
 
   ldap-account-manager:
     build:
+      cache_from:
+        - adarnimrod/ldap-account-manager
       context: ldap-account-manager/
     depends_on:
       - ldap
@@ -37,6 +42,7 @@ services:
       LAM_PASSWORD: "${LAM_PASSWORD:-foo}"
       LDAP_ADMIN_DN: "cn=admin,${LDAP_BASE_DN:-dc=nowhere,dc=com}"
       LDAP_BASE_DN: "${LDAP_BASE_DN:-dc=nowhere,dc=com}"
+    image: adarnimrod/ldap-account-manager
     ports:
       - 80:80
     restart: always
