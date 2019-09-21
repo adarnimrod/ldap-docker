@@ -2,6 +2,12 @@
 ---
 version: '3.5'
 services:
+  crond:
+    build:
+      context: crond/
+    volumes:
+      - /run/docker.sock:/run/docker.sock
+
   ldap:
     build:
       cache_from:

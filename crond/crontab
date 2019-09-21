@@ -1,0 +1,1 @@
+@daily docker exec ldap_ldap_1 backup
