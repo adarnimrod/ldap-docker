@@ -8,7 +8,7 @@ cat "$tempfile" > /var/lib/ldap-account-manager/config/lam.conf
 rm "$tempfile"
 
 # Set the password and unset the variable from memory.
-chroot --userspec=www-data / /usr/local/sbin/lam-setpass "$LAM_PASSWORD"
+lam-setpass "$LAM_PASSWORD"
 unset LAM_PASSWORD
 
 # Start the process.
