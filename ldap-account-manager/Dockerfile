@@ -5,9 +5,11 @@ RUN apt-get update && \
         ca-certificates \
         gettext-base \
         ldap-account-manager \
+        libcap2-bin \
         patch \
         wget \
     && \
+    setcap CAP_NET_BIND_SERVICE=+ep /usr/sbin/apache2 && \
     install -d -m 750 -o root -g www-data /var/log/apache2 && \
     install -d -m 755 -o www-data -g root /run/apache2 && \
     a2enmod status && \
@@ -28,7 +30,7 @@ RUN patch --strip 0 --verbose --directory / --input /root/patch.diff && \
     apache2 -t
 ENV LDAP_URI=ldapi:/// \
     LAM_PASSWORD=lam
-EXPOSE 8080
+EXPOSE 80
 USER "www-data"
 WORKDIR /var/www
 ENTRYPOINT [ "entrypoint" ]

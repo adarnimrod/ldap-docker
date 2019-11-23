@@ -50,7 +50,7 @@ services:
       LDAP_BASE_DN: *base_dn
     image: adarnimrod/ldap-account-manager
     ports:
-      - 80:8080
+      - 80:80
     restart: always
     volumes:
       - _run_slapd:/run/slapd

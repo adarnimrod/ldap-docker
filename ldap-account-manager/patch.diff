@@ -69,25 +69,6 @@
  types: attr_group: #cn;#gidNumber;#memberUID;#description
  types: modules_group: posixGroup
  
---- /etc/apache2/ports.conf	2019-11-09 19:58:29.052813201 +0200
-+++ /etc/apache2/ports.conf	2019-11-02 14:40:08.000000000 +0200
-@@ -2,7 +2,7 @@
- # have to change the VirtualHost statement in
- # /etc/apache2/sites-enabled/000-default.conf
- 
--Listen 80
-+Listen 8080
- 
- <IfModule ssl_module>
- 	Listen 443
---- /etc/apache2/sites-available/000-default.conf	2019-04-03 00:13:44.000000000 +0300
-+++ /etc/apache2/sites-available/000-default.conf	2019-11-09 20:00:01.459226750 +0200
-@@ -1,4 +1,4 @@
--<VirtualHost *:80>
-+<VirtualHost *:8080>
- 	# The ServerName directive sets the request scheme, hostname and port that
- 	# the server uses to identify itself. This is used when creating
- 	# redirection URLs. In the context of virtual hosts, the ServerName
 --- /etc/apache2/mods-available/status.conf	2019-04-03 00:13:44.000000000 +0300
 +++ /etc/apache2/mods-available/status.conf	2019-11-09 19:59:09.642896703 +0200
 @@ -5,7 +5,7 @@
