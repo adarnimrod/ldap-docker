@@ -27,8 +27,12 @@ then
 fi
 
 # Generate random DH parameters.
-echo Generating DH parameters, this will take a while. >&2
-time openssl dhparam -out /usr/share/slapd/dh.pem 2048
+if [ -z "${SSL_DHPARAMS_FILE:-}" ] || [ ! -f "${SSL_DHPARAMS_FILE:-}" ]
+then
+    echo Generating DH parameters, this will take a while. >&2
+    export SSL_DHPARAMS_FILE='/usr/share/slapd/dh.pem'
+    time openssl dhparam -out "$SSL_DHPARAMS_FILE" 2048
+fi
 
 # Run slapadd with the correct user and location of the config directory.
 alias slapadd='slapadd -gv -F /var/lib/ldap/config'
@@ -37,6 +41,10 @@ alias slapadd='slapadd -gv -F /var/lib/ldap/config'
 if [ -z "$(find /var/lib/ldap/config -maxdepth 1 -mindepth  1)" ]
 then
     echo No configuration found, generating a new one. >&2
+    SLAPD_UID="$(id -u openldap)"
+    export SLAPD_UID
+    SLAPD_GID="$(id -g openldap)"
+    export SLAPD_GID
     # shellcheck disable=SC2002
     cat /usr/share/slapd/config.ldif | envsubst | slapadd -b 'cn=config'
 fi
@@ -50,7 +58,7 @@ then
 fi
 
 # Configure the client.
-cat << EOF >> /etc/ldap/ldap.conf
+cat >> /etc/ldap/ldap.conf <<EOF
 URI         ldapi:///
 SASL_MECH   EXTERNAL
 BASE        $BASE_DN

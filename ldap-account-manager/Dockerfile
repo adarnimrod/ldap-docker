@@ -1,4 +1,4 @@
-FROM debian:sid-slim
+FROM debian:bullseye-slim
 # hadolint ignore=DL3008
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -15,7 +15,6 @@ RUN apt-get update && \
     a2enmod status && \
     ln -sf /dev/stdout /var/log/apache2/access.log && \
     ln -sf /dev/stderr /var/log/apache2/error.log && \
-    ln -sf /dev/stdout /var/log/apache2/lam.log && \
     ln -sf /dev/stdout /var/log/apache2/other_vhosts_access.log && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/*
 ENV APACHE_RUN_DIR=/run/apache2 \
@@ -28,8 +27,7 @@ COPY --chown=root:root entrypoint /usr/local/bin/
 COPY --chown=root:root lam-setpass /usr/local/bin/
 RUN patch --strip 0 --verbose --directory / --input /root/patch.diff && \
     apache2 -t
-ENV LDAP_URI=ldapi:/// \
-    LAM_PASSWORD=lam
+ENV LDAP_URI=ldapi:///
 EXPOSE 80
 USER "www-data"
 WORKDIR /var/www

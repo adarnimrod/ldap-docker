@@ -43,5 +43,5 @@ WORKDIR /var/lib/ldap
 USER openldap
 ENTRYPOINT [ "entrypoint" ]
 CMD [ "slapd", "-F", "/var/lib/ldap/config", "-u", "openldap", "-g", "openldap", "-h", "\"$LDAP_URLS\"", "-d", "$SLAPD_DEBUG_LEVEL" ]
-HEALTHCHECK CMD ldapsearch -b cn=config > /dev/null || exit 1
+HEALTHCHECK --start-period=5m CMD ldapsearch -b cn=config > /dev/null || exit 1
 STOPSIGNAL INT

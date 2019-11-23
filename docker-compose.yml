@@ -10,53 +10,50 @@ services:
 
   ldap:
     build:
-      cache_from:
-        - adarnimrod/slapd
       context: slapd/
-    domainname: "${LDAP_HOSTNAME:-ldap}.${LDAP_DOMAIN:-nowhere.com}"
     environment:
       LDAP_ROOTPASS: &password "${LDAP_ROOTPASS:-foo}"
-      LDAP_DOMAIN: "${LDAP_DOMAIN:-nowhere.com}"
-      LDAP_ORGANIZATION: "${LDAP_ORGANIZATION:-none}"
-    hostname: "${LDAP_HOSTNAME:-ldap}"
+      LDAP_DOMAIN: "${LDAP_DOMAIN:-shore.co.il}"
+      LDAP_ORGANIZATION: "${LDAP_ORGANIZATION:-shore}"
+      #SLAPD_DEBUG_LEVEL: "any"
+      SSL_DHPARAMS_FILE: /var/ssl/dhparams
+    hostname: "${LDAP_HOSTNAME:-ldap}.${LDAP_DOMAIN:-shore.co.il}"
     image: adarnimrod/slapd
     restart: always
     volumes:
       - _run_slapd:/run/slapd
       - ldap:/var/lib/ldap
       - backup_ldap:/var/backups/ldap
-
-  nss-pam-ldapd:
-    build:
-      context: nss-pam-ldapd/
-    command: /usr/sbin/nslcd --debug --nofork
-    depends_on:
-      - ldap
-    environment:
-      LDAP_BASE_DN: &base_dn "${LDAP_BASE_DN:-dc=nowhere,dc=com}"
-    volumes:
-      - _run_slapd:/run/slapd
+      - /var/ssl/dhparams:/var/ssl/dhparams:ro
 
   ldap-account-manager:
     build:
-      cache_from:
-        - adarnimrod/ldap-account-manager
       context: ldap-account-manager/
     depends_on:
       - ldap
     environment:
-      LAM_PASSWORD: *password
-      LDAP_ADMIN_DN: "cn=admin,${LDAP_BASE_DN:-dc=nowhere,dc=com}"
-      LDAP_BASE_DN: *base_dn
+      LAM_PASSWORD: *password  # pragma: allowlist secret
+      LDAP_ADMIN_DN: "cn=admin,${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
+      LDAP_BASE_DN: &base_dn "${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
     image: adarnimrod/ldap-account-manager
-    ports:
-      - 80:80
     restart: always
     volumes:
       - _run_slapd:/run/slapd
 
+  # nss-pam-ldapd:
+  #   build:
+  #     context: nss-pam-ldapd/
+  #   command: /usr/sbin/nslcd --debug --nofork
+  #   depends_on:
+  #     - ldap
+  #   environment:
+  #     LDAP_BASE_DN: *base_dn
+  #   volumes:
+  #     - _run_slapd:/run/slapd
+
 volumes:
   _run_slapd:
+    name: run_slapd
   ldap:
   backup_ldap:
     labels:

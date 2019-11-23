@@ -6,7 +6,7 @@
 
 Name | Description | Default value
 --- | --- | ---
-`LAM_PASSWORD` | Password for administrating LAM | `lam`
+`LAM_PASSWORD` | Password for administering LAM | `lam`
 `LDAP_URI` | URI of the LDAP service | `ldapi:///`
 `LDAP_ADMIN_DN` | DN of the admin account
 `LDAP_BASE_DN` | Base DN
