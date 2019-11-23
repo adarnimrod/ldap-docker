@@ -10,13 +10,6 @@ export PASSWORD_HASH
 # shellcheck disable=SC2039
 ulimit -n 1024 || true
 
-# Create and set owner for runtime directories.
-install -d -o openldap -g openldap /run/slapd
-install -d -o openldap -g openldap /var/backups/ldap
-install -d -o openldap -g openldap /var/lib/ldap
-install -d -o openldap -g openldap /var/lib/ldap/config
-install -d -o openldap -g openldap /var/lib/ldap/data
-
 # Base DN.
 BASE_DN="dc=$(echo "$LDAP_DOMAIN" | sed 's/^\.//; s/\.$//; s/\./,dc=/g')"
 export BASE_DN
@@ -30,7 +23,7 @@ if [ "${SSL_CERT_FILE:-}" = "/etc/ssl/certs/ssl-cert-snakeoil.pem" ] || \
    [ "${SSL_KEY_FILE:-}" = "/etc/ssl/private/ssl-cert-snakeoil.key" ]
 then
     echo Generating self-signed key and certificate. >&2
-    DEBIAN_FRONTEND=noninteractive time make-ssl-cert generate-default-snakeoil --force-overwrite
+    DEBIAN_FRONTEND=noninteractive time fakeroot make-ssl-cert generate-default-snakeoil --force-overwrite
 fi
 
 # Generate random DH parameters.
@@ -38,7 +31,7 @@ echo Generating DH parameters, this will take a while. >&2
 time openssl dhparam -out /usr/share/slapd/dh.pem 2048
 
 # Run slapadd with the correct user and location of the config directory.
-alias slapadd='chroot --userspec openldap:openldap / slapadd -gv -F /var/lib/ldap/config'
+alias slapadd='slapadd -gv -F /var/lib/ldap/config'
 
 # Create configuration is none is present.
 if [ -z "$(find /var/lib/ldap/config -maxdepth 1 -mindepth  1)" ]
