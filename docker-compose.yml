@@ -18,7 +18,6 @@ services:
       #SLAPD_DEBUG_LEVEL: "any"
       SSL_DHPARAMS_FILE: /var/ssl/dhparams
     hostname: "${LDAP_HOSTNAME:-ldap}.${LDAP_DOMAIN:-shore.co.il}"
-    image: adarnimrod/slapd
     restart: always
     volumes:
       - _run_slapd:/run/slapd
@@ -35,7 +34,6 @@ services:
       LAM_PASSWORD: *password  # pragma: allowlist secret
       LDAP_ADMIN_DN: "cn=admin,${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
       LDAP_BASE_DN: &base_dn "${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
-    image: adarnimrod/ldap-account-manager
     restart: always
     volumes:
       - _run_slapd:/run/slapd
