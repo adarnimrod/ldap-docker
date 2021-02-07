@@ -35,6 +35,7 @@ services:
       LAM_PASSWORD: *password  # pragma: allowlist secret
       LDAP_ADMIN_DN: "cn=admin,${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
       LDAP_BASE_DN: &base_dn "${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
+    hostname: lam.shore.co.il
     restart: always
     volumes:
       - _run_slapd:/run/slapd
