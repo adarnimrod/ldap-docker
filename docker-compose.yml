@@ -5,6 +5,7 @@ services:
   crond:
     build:
       context: crond/
+    restart: always
     volumes:
       - /run/docker.sock:/run/docker.sock
 
