@@ -9,6 +9,14 @@ services:
     volumes:
       - /run/docker.sock:/run/docker.sock
 
+  httpd:
+    build:
+      context: httpd/
+    hostname: auth.shore.co.il
+    restart: always
+    volumes:
+      - _run_slapd:/run/slapd
+
   ldap:
     build:
       context: slapd/
