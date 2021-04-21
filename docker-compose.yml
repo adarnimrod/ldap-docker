@@ -2,6 +2,20 @@
 ---
 version: '3.5'
 services:
+  auth:
+    environment:
+      LDAP_BASE_DN: "ou=People,${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
+      LDAP_OBJECTS_DN: "dn"
+      LDAP_OPENLDAP: !!str true
+      LDAP_REALM_NAME: shore.co.il authentication
+      LDAP_USER_OBJECT_FILTER: "(&(objectclass=inetOrgPerson)(uid=%s))"
+      SECRET_KEY: "${SECRET_KEY:-qwerty123}"
+    hostname: auth.shore.co.il
+    image: registry.shore.co.il/ldap-auth
+    restart: always
+    volumes:
+      - _run_slapd:/run/slapd
+
   crond:
     build:
       context: crond/
