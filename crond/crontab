@@ -1,1 +1,1 @@
-@daily docker exec ldap_ldap_1 backup
+@daily docker exec ldap_ldap_1 backup || wget --spider https://notify.shore.co.il/send?message=LDAP%20backup%20failed.
