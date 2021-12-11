@@ -109,4 +109,3 @@ olcAccess: to attrs=shadowLastChange
 # everyone else can read everything.
 olcAccess: to *
   by * read
-

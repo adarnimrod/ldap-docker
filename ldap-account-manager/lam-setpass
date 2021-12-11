@@ -12,4 +12,3 @@ $cfg->save();
 $conf = new LAMConfig("lam");
 $conf->set_Passwd($argv[1]);
 $conf->save();
-

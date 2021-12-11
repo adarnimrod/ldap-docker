@@ -10,7 +10,7 @@ The container exposes TCP ports 389 (LDAP) and 636 (LDAPS) as well as the
 ## Environment variables
 
 Name | Description | Default value
-\-\-\- | \-\-\- | \-\-\-
+--- | --- | ---
 `LDAP_URLS` | List of URLs to serve. | `ldap:/// ldapi:/// ldaps:///`
 `LDAP_ROOTPASS` | Root password.
 `LDAP_DOMAIN` | Domain.
@@ -30,7 +30,7 @@ provided, those are used instead.
 ## Persistence
 
 The configuration (`cn=config`) and data LDAP directories reside in the
-`config` and `data` diretories respectively in the `/var/lib/ldap` volume.
+`config` and `data` directories respectively in the `/var/lib/ldap` volume.
 The LDAP directories are generated only if they're missing. Changes to
 environment variables afterwards won't change the configuration, since that is
 persisted to a volume. There's also the `/var/backups/ldap` volume where the

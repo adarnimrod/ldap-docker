@@ -5,7 +5,7 @@
 ## Environment variables
 
 Name | Description | Default value
-\-\-\- | \-\-\- | \-\-\-
+--- | --- | ---
 `LAM_PASSWORD` | Password for administering LAM | `lam`
 `LDAP_URI` | URI of the LDAP service | `ldapi:///`
 `LDAP_ADMIN_DN` | DN of the admin account

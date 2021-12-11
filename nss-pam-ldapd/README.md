@@ -11,7 +11,7 @@ daemon. To use this container, execute a different process (like `su` or
 ## Environment variables
 
 Name | Default value
-\-\-\- | \-\-\-
+--- | ---
 `LDAP_URIS` | `ldapi:///`
 `LDAP_AUTH_TYPE` | `none`
 `LDAP_BINDDN`
