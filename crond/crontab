@@ -1,1 +1,2 @@
 @weekly docker exec ldap_ldap_1 backup || wget --spider https://notify.shore.co.il/send?message=LDAP%20backup%20failed.
+@daily docker exec ldap_ldap_1 find /var/backups/ldap -atime +30 -delete

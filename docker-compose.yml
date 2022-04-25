@@ -37,7 +37,7 @@ services:
     volumes:
       - _run_slapd:/run/slapd
       - ldap:/var/lib/ldap
-      - backup_ldap:/var/backups/ldap
+      - /var/backups/ldap:/var/backups/ldap
       - /var/ssl/dhparams:/var/ssl/dhparams:ro
 
   ldap-account-manager:
@@ -68,9 +68,6 @@ volumes:
   _run_slapd:
     name: run_slapd
   ldap:
-  backup_ldap:
-    labels:
-      snapshot: 'true'
 
 networks:
   default:

@@ -1,11 +1,21 @@
 #!/bin/sh
 set -eux
 
+cleanup () {
+    rm -rf "$tempdir"
+}
+
 alias slapcat='slapcat -vF /var/lib/ldap/config'
 
-slapcat -n0 -l /var/backups/ldap/config.ldif
+now="$(date --utc --iso-8601=seconds)"
+trap 'cleanup' INT QUIT EXIT TERM
+tempdir="$(mktemp -d)"
+
+slapcat -n0 -l "$tempdir/config.ldif"
 
 for dn in $(ldapsearch -Y EXTERNAL -LLL -s base -b '' o namingContexts | sed -n '/namingContexts/ s/namingContexts: //gp')
 do
-    slapcat -b "$dn" -l "/var/backups/ldap/$dn.ldif"
+    slapcat -b "$dn" -l "$tempdir/$dn.ldif"
 done
+
+tar -zcf "/var/backups/ldap/$now.tar.gz" -C "$tempdir" .

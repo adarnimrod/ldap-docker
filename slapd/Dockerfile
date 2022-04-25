@@ -30,6 +30,7 @@ COPY --chown=root:root config.ldif /usr/share/slapd/
 COPY --chown=root:root skel.ldif /usr/share/slapd/
 COPY --chown=root:root entrypoint /usr/local/sbin/
 COPY --chown=root:root backup /usr/local/sbin/
+COPY --chown=root:root restore /usr/local/sbin/
 EXPOSE 389 636
 VOLUME [ "/var/lib/ldap" ]
 VOLUME [ "/run/slapd" ]

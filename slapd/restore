@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eux
+
+cleanup () {
+    rm -rf "$tempdir"
+}
+
+alias slapadd='slapadd -vF /var/lib/ldap/config'
+
+src="$1"
+
+trap 'cleanup' INT QUIT EXIT TERM
+
+tempdir="$(mktemp -d)"
+
+tar -xzf "$src" -C "$tempdir"
+
+slapadd -c -n0 -l "$tempdir/config.ldif"
+
+# shellcheck disable=SC2044
+for file in $(find "$tempdir" -type f -name '*.ldif' \! -name config.ldif -printf '%f\n')
+do
+    dn="${file%.ldif}"
+    slapadd -c -b "$dn" -l "$tempdir/$file"
+done
