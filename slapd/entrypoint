@@ -62,6 +62,7 @@ cat >> /etc/ldap/ldap.conf <<EOF
 URI         ldapi:///
 SASL_MECH   EXTERNAL
 BASE        $BASE_DN
+TLS_CACERT  /etc/ssl/certs/ca-certificates.crt
 EOF
 
 # Unset the root password hash.

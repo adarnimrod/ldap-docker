@@ -20,7 +20,7 @@ RUN apt-get update && \
     install -o root -g ssl-cert -m 664 /dev/null /etc/ssl/certs/ssl-cert-snakeoil.pem && \
     install -o root -g ssl-cert -m 664 /dev/null /etc/ssl/private/ssl-cert-snakeoil.key && \
     install -o root -g ssl-cert -m 664 /dev/null /usr/share/slapd/dh.pem && \
-    chown openldap /etc/ldap/ldap.conf && \
+    install -o openldap -g root -m 644 /dev/null /etc/ldap/ldap.conf && \
     install -d -o openldap -g openldap /run/slapd && \
     install -d -o openldap -g openldap /var/backups/ldap && \
     install -d -o openldap -g openldap /var/lib/ldap && \
