@@ -9,6 +9,7 @@ $cfg->setPassword($argv[1]);
 $cfg->save();
 
 // For the server profiles.
-$conf = new LAMConfig("lam");
+$profile_manager = new ServerProfilePersistenceManager();
+$conf = $profile_manager->loadProfile("lam");
 $conf->set_Passwd($argv[1]);
-$conf->save();
+$profile_manager->saveProfile($conf, "lam");
