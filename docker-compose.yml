@@ -1,4 +1,3 @@
-# vim:ff=unix:ts=2:sw=2:ai:expandtab
 ---
 version: '3.5'
 services:
@@ -6,7 +5,7 @@ services:
     environment:
       LDAP_BASE_DN: "ou=People,${LDAP_BASE_DN:-dc=shore,dc=co,dc=il}"
       LDAP_OBJECTS_DN: "dn"
-      LDAP_OPENLDAP: !!str true
+      LDAP_OPENLDAP: 'true'
       LDAP_REALM_NAME: shore.co.il authentication
       LDAP_USER_OBJECT_FILTER: "(&(objectclass=inetOrgPerson)(uid=%s))"
       SECRET_KEY: "${SECRET_KEY:-qwerty123}"
