@@ -1,11 +1,3 @@
---- /etc/ldap-account-manager/config.cfg	2019-03-25 18:21:36.000000000 +0200
-+++ /etc/ldap-account-manager/config.cfg	2019-06-25 14:18:51.906120546 +0300
-@@ -9,4 +9,4 @@
- logLevel: 4
- 
- # log destination
--logDestination: SYSLOG
-+logDestination: /dev/stdout
 --- /etc/apache2/sites-available/000-default.conf	2018-11-03 13:34:33.000000000 +0200
 +++ /etc/apache2/sites-available/000-default.conf	2019-06-25 14:55:43.956626591 +0300
 @@ -18,7 +18,7 @@
@@ -26,6 +18,17 @@
  </VirtualHost>
  
  # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+--- /etc/apache2/mods-available/status.conf	2019-04-03 00:13:44.000000000 +0300
++++ /etc/apache2/mods-available/status.conf	2019-11-09 19:59:09.642896703 +0200
+@@ -5,7 +5,7 @@
+ 
+ 	<Location /server-status>
+ 		SetHandler server-status
+-		Require local
++		#Require local
+ 		#Require ip 192.0.2.0/24
+ 	</Location>
+ 
 --- /var/lib/ldap-account-manager/config/lam.conf	2019-09-20 23:14:19.000000000 +0300
 +++ /var/lib/ldap-account-manager/config/lam.conf	2019-09-20 23:59:56.291338527 +0300
 @@ -5,22 +5,22 @@
@@ -36,7 +39,7 @@
 +ServerURL: ${LDAP_URI}
  
  # list of users who are allowed to use LDAP Account Manager
- # names have to be seperated by semicolons
+ # names have to be separated by semicolons
  # e.g. admins: cn=admin,dc=yourdomain,dc=org;cn=root,dc=yourdomain,dc=org
 -Admins: cn=Manager,dc=my-domain,dc=com
 +Admins: ${LDAP_ADMIN_DN}
@@ -46,8 +49,8 @@
  
  # suffix of tree view
  # e.g. dc=yourdomain,dc=org
--treesuffix: dc=yourdomain,dc=org
-+treesuffix: ${LDAP_BASE_DN}
+-tools: treeViewSuffix: dc=yourdomain,dc=org
++tools: treeViewSuffix: ${LDAP_BASE_DN}
  
  # default language (a line from config/language)
 -defaultLanguage: en_GB.utf8
@@ -55,7 +58,7 @@
  
  # Path to external Script
  scriptPath:
-@@ -52,11 +52,11 @@
+@@ -55,11 +55,11 @@
  activeTypes: user,group
  
  
@@ -69,14 +72,14 @@
  types: attr_group: #cn;#gidNumber;#memberUID;#description
  types: modules_group: posixGroup
  
---- /etc/apache2/mods-available/status.conf	2019-04-03 00:13:44.000000000 +0300
-+++ /etc/apache2/mods-available/status.conf	2019-11-09 19:59:09.642896703 +0200
-@@ -5,7 +5,7 @@
+--- /etc/ldap-account-manager/config.cfg	2019-03-25 18:21:36.000000000 +0200
++++ /etc/ldap-account-manager/config.cfg	2019-06-25 14:18:51.906120546 +0300
+@@ -9,7 +9,7 @@
+ logLevel: 4
  
- 	<Location /server-status>
- 		SetHandler server-status
--		Require local
-+		#Require local
- 		#Require ip 192.0.2.0/24
- 	</Location>
+ # log destination
+-logDestination: SYSLOG
++logDestination: /dev/fd/1
  
+ configDatabaseType: files
+ configDatabaseServer:
