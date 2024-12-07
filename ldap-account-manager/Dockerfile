@@ -1,4 +1,5 @@
 FROM registry.shore.co.il/httpd:bookworm
+USER root
 # hadolint ignore=DL3008
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -7,6 +8,7 @@ RUN apt-get update && \
         patch \
     && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/*
+USER www-data
 COPY --chown=root:root patch.diff /root/
 COPY --chown=root:root entrypoint /usr/local/bin/
 COPY --chown=root:root lam-setpass /usr/local/bin/
