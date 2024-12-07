@@ -1,14 +1,5 @@
 --- /etc/apache2/sites-available/000-default.conf	2018-11-03 13:34:33.000000000 +0200
 +++ /etc/apache2/sites-available/000-default.conf	2019-06-25 14:55:43.956626591 +0300
-@@ -18,7 +18,7 @@
- 	#LogLevel info ssl:warn
- 
- 	ErrorLog ${APACHE_LOG_DIR}/error.log
--	CustomLog ${APACHE_LOG_DIR}/access.log combined
-+	CustomLog ${APACHE_LOG_DIR}/access.log combined expr=!(%{REMOTE_HOST}=='127.0.0.1'&&%{HTTP_USER_AGENT}=='Healthcheck')
- 
- 	# For most configuration files from conf-available/, which are
- 	# enabled or disabled at a global level, it is possible to
 @@ -26,6 +26,8 @@
  	# following line enables the CGI configuration for this host only
  	# after it has been globally disabled with "a2disconf".
@@ -18,17 +9,6 @@
  </VirtualHost>
  
  # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
---- /etc/apache2/mods-available/status.conf	2019-04-03 00:13:44.000000000 +0300
-+++ /etc/apache2/mods-available/status.conf	2019-11-09 19:59:09.642896703 +0200
-@@ -5,7 +5,7 @@
- 
- 	<Location /server-status>
- 		SetHandler server-status
--		Require local
-+		#Require local
- 		#Require ip 192.0.2.0/24
- 	</Location>
- 
 --- /var/lib/ldap-account-manager/config/lam.conf	2019-09-20 23:14:19.000000000 +0300
 +++ /var/lib/ldap-account-manager/config/lam.conf	2019-09-20 23:59:56.291338527 +0300
 @@ -5,22 +5,22 @@
