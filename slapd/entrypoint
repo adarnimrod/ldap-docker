@@ -69,4 +69,4 @@ EOF
 unset PASSWORD_HASH
 
 # Run CMD.
-eval exec "$@"
+eval exec "$*"

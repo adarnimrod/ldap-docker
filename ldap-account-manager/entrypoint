@@ -12,4 +12,4 @@ lam-setpass "$LAM_PASSWORD"
 unset LAM_PASSWORD
 
 # Start the process.
-eval exec "$@"
+eval exec "$*"

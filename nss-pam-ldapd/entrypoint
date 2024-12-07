@@ -34,4 +34,4 @@ TLS_CACERT  ${LDAP_SASL_SECPROPS:-}
 TLS_REQCERT ${LDAP_REQCERT:-}
 EOF
 
-eval exec gosu "nslcd:nslcd" "$@"
+eval exec gosu "nslcd:nslcd" "$*"
