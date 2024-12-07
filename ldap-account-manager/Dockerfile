@@ -16,4 +16,5 @@ RUN patch --strip 0 --verbose --directory / --input /root/patch.diff && \
 USER www-data
 ENV LDAP_URI=ldapi:///
 ENTRYPOINT [ "entrypoint" ]
+CMD [ "apache2", "-DFOREGROUND" ]
 HEALTHCHECK CMD wget --spider --quiet http://localhost/lam/ --user-agent 'Healthcheck' || exit 1
