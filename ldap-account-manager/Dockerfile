@@ -8,12 +8,12 @@ RUN apt-get update && \
         patch \
     && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/* /var/cache/apt/archives/*
-USER www-data
 COPY --chown=root:root patch.diff /root/
 COPY --chown=root:root entrypoint /usr/local/bin/
 COPY --chown=root:root lam-setpass /usr/local/bin/
 RUN patch --strip 0 --verbose --directory / --input /root/patch.diff && \
     apache2 -t
+USER www-data
 ENV LDAP_URI=ldapi:///
 ENTRYPOINT [ "entrypoint" ]
 HEALTHCHECK CMD wget --spider --quiet http://localhost/lam/ --user-agent 'Healthcheck' || exit 1
