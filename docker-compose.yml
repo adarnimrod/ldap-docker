@@ -70,4 +70,5 @@ volumes:
 
 networks:
   default:
+    external: true
     name: shore
